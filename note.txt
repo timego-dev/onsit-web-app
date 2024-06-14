@@ -1,0 +1,15 @@
+- Build Docker Image for Frontend
+docker build -t osint-web-frontend . -f client.dockerfile
+
+- Run the client container, mapping the exposed port (3000) to a host port (e.g., 8080):
+docker run -d --name osint-frontend -p 80:3000 osint-web-frontend
+
+- Build Docker Image for Backend
+docker build -t osint-web-server . -f server.dockerfile
+
+- Run server
+docker run -d --name osint-server -p 8080:5000 osint-web-server
+docker run -d -v /Volumes/Projects/Test/PTBOX/osint-web-app:/app --name osint-server -p 8080:5000 osint-web-server
+
+- Install theHarvester in MacOS using Homebrew
+brew install theharvester
