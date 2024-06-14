@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import ScanInput from './components/ScanInput';
-import ScanCard from './components/ScanCard';
+import ScanInput from "./components/ScanInput";
+import ScanCard from "./components/ScanCard";
+import { Col, Row } from "antd";
+import ScanHistory from "./components/ScanHistory";
 
 function App() {
-  const [scanResults, setScanResults] = useState<any>(null); // State to store scan results
-
-  const handleScanStart = (domain: string, tool: string) => {
-    // Simulate calling Flask backend to initiate scan (replace with actual API call)
-    fetch('/scan', {
-      method: 'POST',
-      body: JSON.stringify({ domain, tool }),
-    })
-      .then((response) => response.json())
-      .then((data) => setScanResults(data));
-  };
-
   return (
-    <div className="App">
-      <ScanInput onScanStart={handleScanStart} />
-      {scanResults && <ScanCard scanResults={scanResults} />}
+    <div className="container-wrapper">
+      <ScanInput />
+      <Row style={{ width: "100%" }}>
+        <Col
+          span={24}
+          lg={{ span: 18, offset: 3 }}
+          xxl={{ span: 12, offset: 6 }}
+        >
+          <ScanCard />
+        </Col>
+        <Col
+          span={24}
+          lg={{ span: 18, offset: 3 }}
+          xxl={{ span: 12, offset: 6 }}
+        >
+          <ScanHistory />
+        </Col>
+      </Row>
     </div>
   );
 }

@@ -1,33 +1,42 @@
-import React from 'react';
+import { Card, Col, Row } from "antd";
+import moment from "moment";
+import { CloseOutlined } from "@ant-design/icons";
+import { useAppDispatch, useAppSelector } from "../app/hooks";
+import { setShowCard } from "../app/slices/domain.slice";
 
-interface ScanCardProps {
-  scanResults: any;
-}
+const ScanCard: React.FC = () => {
+  const { scanResult, showCard } = useAppSelector((state) => state.domain);
+  const dispatch = useAppDispatch();
+  if (!scanResult || !showCard) return null;
 
-const ScanCard: React.FC<ScanCardProps> = ({ scanResults }) => {
-  if (!scanResults) return null;
-
-  const { domain, start_time, end_time, data } = scanResults;
-  const subdomains = data?.subdomains || []; // Handle potential missing data
+  const { domain, start_time, end_time, data } = scanResult;
+  const subdomains = data?.subdomains || [];
 
   return (
-    <div className="scan-card">
-      <h2>Scan Details</h2>
-      <p>Domain: {domain}</p>
-      <p>Start Time: {start_time}</p>
-      <p>End Time: {end_time}</p>
-      <h3>Subdomains</h3>
-      {subdomains.length > 0 ? (
-        <ul>
-          {subdomains.map((subdomain: string) => (
-            <li key={subdomain}>{subdomain}</li>
-          ))}
-        </ul>
-      ) : (
-        <p>No subdomains found.</p>
-      )}
-      {/* Add sections for other data (emails, etc.) based on your logic  */}
-    </div>
+    <Card
+      title="Scan results"
+      extra={<CloseOutlined onClick={() => dispatch(setShowCard(false))} />}
+      bordered={false}
+    >
+      <Row gutter={[16, 8]}>
+        <Col span={4}>Domain:</Col>
+        <Col span={20}>{domain}</Col>
+        <Col span={4}>Start time:</Col>
+        <Col span={20}>{moment(start_time).format("L LTS")}</Col>
+        <Col span={4}>End time:</Col>
+        <Col span={20}>{moment(end_time).format("L LTS")}</Col>
+        <Col span={4}>Subdomains:</Col>
+        {subdomains.length ? (
+          subdomains.map((subdomain, index) => (
+            <Col offset={index && 4} span={20}>
+              {subdomain}
+            </Col>
+          ))
+        ) : (
+          <Col span={20}>No subdomains found</Col>
+        )}
+      </Row>
+    </Card>
   );
 };
 
